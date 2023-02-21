@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/savefile
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_SERVLET_MULTIPART_MAX_SIZE=2048
+    ports:
+      - "8080:8080"
+    networks:
+      - updown_file
+    depends_on:
+      - postgresql
+  postgresql:
+    image: 'postgres:13.1-alpine'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=savefile
+    ports:
+      - "5432:5432"
+    networks:
+      - updown_file
+    volumes:
+      - ./data:/var/lib/postgres
+networks:
+  updown_file:
